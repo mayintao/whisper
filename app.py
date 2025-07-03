@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from faster_whisper import WhisperModel
 import os
 import tempfile
 import subprocess
 
 app = Flask(__name__)
+CORS(app)  # 允许跨域请求
 model = WhisperModel("base", device="cpu", compute_type="int8")
 
 # 格式化 SRT 时间戳
