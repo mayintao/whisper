@@ -42,6 +42,7 @@ def transcribe():
 
     file = request.files["file"]
     filename = file.filename.lower()
+    print(filename)
 
     # 临时保存文件
     with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(filename)[1]) as temp_input:
@@ -54,7 +55,8 @@ def transcribe():
         extract_audio_from_video(input_path, temp_audio_path)
     else:
         temp_audio_path = input_path  # 已是音频
-
+    print(temp_audio_path)
+    
     # 识别
     segments, info = model.transcribe(temp_audio_path, beam_size=5)
 
@@ -65,6 +67,7 @@ def transcribe():
         seg_list.append(seg)
 
     srt_content = generate_srt(seg_list)
+    print(srt_content)
 
     # 清理临时文件
     os.remove(input_path)
