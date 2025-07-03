@@ -1,5 +1,3 @@
 flask
-torch
-diffusers
-transformers
-accelerate
+faster-whisper
+ffmpeg-python
