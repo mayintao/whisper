@@ -11,6 +11,9 @@ CORS(app)  # 允许跨域请求
 # 模型
 model = WhisperModel("base", device="cpu", compute_type="int8")
 
+UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
 
 @app.route("/")
 def index():
@@ -53,8 +56,29 @@ def transcribe():
         return jsonify({"error": "请上传文件"}), 400
     filename = file.filename.lower()
     print(filename)
+    filepath = os.path.join(UPLOAD_FOLDER, filename)
+    file.save(filepath)
 
-    return "Whisper 视频/音频 识别 + 字幕 API"
+    # 识别
+    segments, info = model.transcribe(filepath, beam_size=5)
+
+    full_text = ""
+    seg_list = []
+    for seg in segments:
+        full_text += seg.text.strip() + " "
+        seg_list.append(seg)
+
+    srt_content = generate_srt(seg_list)
+    print(srt_content)
+
+    # 清理临时文件
+    os.remove(filepath)
+
+    return jsonify({
+        "language": info.language,
+        "text": full_text.strip(),
+        "srt": srt_content
+    })
 
 
 if __name__ == "__main__":
