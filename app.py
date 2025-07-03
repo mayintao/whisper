@@ -54,41 +54,7 @@ def transcribe():
     filename = file.filename.lower()
     print(filename)
 
-    # 临时保存文件
-    with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(filename)[1]) as temp_input:
-        file.save(temp_input.name)
-        input_path = temp_input.name
-
-    # 如果是视频，提取音频
-    if filename.endswith((".mp4", ".mov", ".mkv", ".avi")):
-        temp_audio_path = tempfile.NamedTemporaryFile(delete=False, suffix=".wav").name
-        extract_audio_from_video(input_path, temp_audio_path)
-    else:
-        temp_audio_path = input_path  # 已是音频
-    print(temp_audio_path)
-    
-    # 识别
-    segments, info = model.transcribe(temp_audio_path, beam_size=5)
-
-    full_text = ""
-    seg_list = []
-    for seg in segments:
-        full_text += seg.text.strip() + " "
-        seg_list.append(seg)
-
-    srt_content = generate_srt(seg_list)
-    print(srt_content)
-
-    # 清理临时文件
-    os.remove(input_path)
-    if os.path.exists(temp_audio_path) and temp_audio_path != input_path:
-        os.remove(temp_audio_path)
-
-    return jsonify({
-        "language": info.language,
-        "text": full_text.strip(),
-        "srt": srt_content
-    })
+    return "Whisper 视频/音频 识别 + 字幕 API"
 
 
 if __name__ == "__main__":
