@@ -37,10 +37,14 @@ def extract_audio_from_video(video_path: str, output_audio_path: str):
 
 @app.route("/transcribe", methods=["POST"])
 def transcribe():
+
+    print("transcribe")
     if "file" not in request.files:
         return jsonify({"error": "请上传音频或视频文件"}), 400
 
+    print("1")
     file = request.files["file"]
+    print(file)
     filename = file.filename.lower()
     print(filename)
 
