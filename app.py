@@ -7,7 +7,15 @@ import subprocess
 
 app = Flask(__name__)
 CORS(app)  # 允许跨域请求
+
+# 模型
 model = WhisperModel("base", device="cpu", compute_type="int8")
+
+
+@app.route("/")
+def index():
+    return "Whisper 视频/音频 识别 + 字幕 API"
+
 
 # 格式化 SRT 时间戳
 def format_timestamp(seconds: float) -> str:
@@ -35,14 +43,15 @@ def extract_audio_from_video(video_path: str, output_audio_path: str):
     ]
     subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
+
 @app.route("/transcribe", methods=["POST"])
 def transcribe():
 
     print("transcribe")
     if "file" not in request.files:
+         print("请上传音频或视频文件")
         return jsonify({"error": "请上传音频或视频文件"}), 400
 
-    print("1")
     file = request.files["file"]
     print(file)
     filename = file.filename.lower()
@@ -84,9 +93,6 @@ def transcribe():
         "srt": srt_content
     })
 
-@app.route("/")
-def index():
-    return "Whisper 视频/音频 识别 + 字幕 API"
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))  # Render 默认 10000
