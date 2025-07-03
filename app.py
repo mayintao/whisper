@@ -48,12 +48,9 @@ def extract_audio_from_video(video_path: str, output_audio_path: str):
 def transcribe():
 
     print("transcribe")
-    if "file" not in request.files:
-         print("请上传音频或视频文件")
-        return jsonify({"error": "请上传音频或视频文件"}), 400
-
-    file = request.files["file"]
-    print(file)
+    file = request.files.get("file")
+    if not file :
+        return jsonify({"error": "请上传文件"}), 400
     filename = file.filename.lower()
     print(filename)
 
