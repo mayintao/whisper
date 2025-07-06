@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app)  # 允许跨域请求
 
 # 模型
-model = WhisperModel("base", device="cpu", compute_type="int8")
+model = WhisperModel("small", device="cpu", compute_type="int8")
 
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -60,7 +60,7 @@ def transcribe():
     file.save(filepath)
 
     # 识别
-    segments, info = model.transcribe(filepath, beam_size=5)
+    segments, info = model.transcribe(filepath, beam_size=2)
 
     full_text = ""
     seg_list = []
