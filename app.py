@@ -8,7 +8,7 @@ import subprocess
 app = Flask(__name__)
 CORS(app)  # 允许跨域请求
 
-model = whisper.load_model("base")
+model = whisper.load_model("tiny")
 
 def is_video(filename):
     return filename.lower().endswith(('.mp4', '.mov', '.avi', '.mkv', '.webm'))
